@@ -632,7 +632,7 @@ class GraphL(Graph):
             self.v_halo[v] = True
             self.v_halo_size[v] = 1.3
             self.v_font_size[v] = 25
-            self.v_font_family[v] = "Consolas"
+            self.v_font_family[v] = "Inconsolata-Regular"
 
         for e in self.edges():
             self.e_color[e] = Color.Gray
@@ -640,9 +640,9 @@ class GraphL(Graph):
             self.e_pen_width[e] = 5
             self.e_end_marker[e] = "arrow"
             self.e_marker_size[e] = 30
-            self.e_text[e] = "edge text"
+            # self.e_text[e] = "edge text"
             self.e_font_size[e] = 20
-            self.e_font_family[e] = "Consolas"
+            self.e_font_family[e] = "Inconsolata-Regular"
 
         # Job No 2
         # Follow function definition to see how layout is created and added
