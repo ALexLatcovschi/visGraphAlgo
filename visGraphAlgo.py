@@ -453,7 +453,7 @@ class Log_Window(Gtk.Window):
             # Sets window position (This works by --moving-- the created window to required position)
             # graph_window.set_pointer(0,0) --this function does not work
 
-    def write(self, log_text):
+    def write(self, log_text, new_line = True):
         """for logging custom text to the Log Window
 
         This function can be used to write log text in log window.
@@ -462,8 +462,12 @@ class Log_Window(Gtk.Window):
         Arguments:
             log_text {string} -- the text to be logged
         """
-        self.log_buffer.insert(
-            self.log_buffer.get_end_iter(), "> " + log_text + "\n")
+        if new_line:
+            self.log_buffer.insert(
+                self.log_buffer.get_end_iter(), "> " + log_text + "\n")
+        else:
+            self.log_buffer.insert(
+                self.log_buffer.get_end_iter(), "> " + log_text)
             # log_buffer is the object which keeps the log text
 
 
@@ -811,17 +815,20 @@ class GraphL(Graph):
     def show_this(self, newWindow):
         newWindow.show_all()
 
-    def repaint_Graph_and_Log(self, log_text='', seconds=1):
-        GLib.idle_add(self.render_wait_log, log_text, 2)
-        time.sleep(.1)
-        # time.sleep(seconds)
+    def repaint_Graph_and_Log(self, log_text=None, seconds=1):
+        if log_text:
+            GLib.idle_add(self.render_wait_log, log_text, seconds= 2)
+        else:
+            GLib.idle_add(self.render_wait_log, seconds= 2)
+        # time.sleep(.1)
+        time.sleep(seconds)
 
-    def render_wait_log(self, log_text='', seconds=1):
+    def render_wait_log(self, log_text=None, seconds=1):
 
         self.canvas.regenerate_surface()
         self.canvas.queue_draw()
-
-        self.log.write(log_text)
+        if log_text:
+            self.log.write(log_text)
 
     def render_resize_wait_log(self, log_text='', seconds=1):
 
@@ -833,7 +840,7 @@ class GraphL(Graph):
 
         self.log.write(log_text)
         # print log_text
-        # time.sleep(seconds)
+        time.sleep(seconds)
 
     def show_BFT(self, root_vertex=0):
         """Starts Breadth First Search Algorithm from given root_vertex index.
@@ -934,7 +941,7 @@ class GraphL(Graph):
                         # which is just discovered
                     BFT_Queue.append(adj_v)
 
-                    self.repaint_Graph_and_Log('Got [' + str(adj_v) + ']', 2)
+                    self.repaint_Graph_and_Log('Found Neighbor Vertex [' + str(adj_v) + ']', 2)
                         # render the discovered neighbor node    
                     self.v_halo[adj_v] = False
                     self.e_dash_style[adj_e] = []
@@ -963,11 +970,11 @@ class GraphL(Graph):
                         self.repaint_Graph_and_Log('The vertex [' + str(
                             adj_v) + '] is already In Queue. => not a BFT Edge ', 2)
                             # render the graph for non tree edge and node
-                            # setting
+                            
 
                     else:  # condition for processed nodes                        
                         self.repaint_Graph_and_Log('The vertex [' + str(
-                            adj_v) + '] is already in BFT Tree. => not a BFT Edge.', 2)
+                            pv) + ', '+str(adj_v)+'] is already in BFT Tree. => not a BFT Edge.', 2)
                         
 
 
@@ -976,7 +983,7 @@ class GraphL(Graph):
                     self.e_pen_width[adj_e] = 5 - 3
                     self.e_end_marker[adj_e] = "none"
                     self.v_halo[adj_v] = False
-                    self.repaint_Graph_and_Log('Skipping this', 1)
+                    self.repaint_Graph_and_Log( seconds= 1)
 
                     e_Is_in_BFT[adj_e] = False
 
@@ -997,7 +1004,7 @@ class GraphL(Graph):
                 self.e_color[e_next] = Color.Black
                 self.e_pen_width[e_next] = 5 + 2
                 self.repaint_Graph_and_Log(
-                    'Black Coloring [' + str(e_next) + '] edge', 2)
+                    'Tree Edge [' + str(e_next) + '] edge', 2)
 
                 loop(v_next)
 
@@ -1086,7 +1093,8 @@ class GraphL(Graph):
             "You are free to explore (zoom in, zoom out, move, "
             "drag graphs) in both of the windows.\n"
             "Close this log window to exit the program. (and also if"
-            " you want to run the algorithm with a new vertex)\n"
+            " you want to run the algorithm with a new vertex)",
+            False
 
         )
 
