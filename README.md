@@ -18,6 +18,11 @@ The current version of the project uses python3. Main development is done on Lin
 2. [Matplotlib](https://matplotlib.org/) -- See [installation instructions](https://matplotlib.org/users/installing.html).
 
 
+Demo
+----
+
+![Run of a Breadth First Search Algorithm](https://github.com/mohitWrangler/visGraphAlgo/blob/master/Demo/Breadth%20First%20Search.gif)
+
 Execution
 ------------------
 
